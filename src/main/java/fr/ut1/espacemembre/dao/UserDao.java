@@ -21,9 +21,13 @@ public class UserDao extends DAO<User> {
     private static final String UPDATE = "UPDATE user SET first_name = ?, last_name = ?, email = ?, date_of_birth = ?, password = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM _nuser WHERE id = ?";
 
+    /**
+     *
+     * @param email
+     * @return
+     */
     public boolean isEmailExist(String email) {
-        try {
-            PreparedStatement preparedStatement = super.connection.prepareStatement(SELECT_BY_EMAIL);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_EMAIL)) {
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) return true;
@@ -33,10 +37,15 @@ public class UserDao extends DAO<User> {
         return false;
     }
 
+    /**
+     *
+     * @param email
+     * @param password
+     * @return
+     */
     public int loginByEmailPwd(String email, String password) {
         int userId = 0;
-        try {
-            PreparedStatement preparedStatement = super.connection.prepareStatement(SELECT_BY_EMAIL_PWD);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_EMAIL_PWD)) {
             preparedStatement.setString(1, email);
             preparedStatement.setString(2, password);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -51,8 +60,7 @@ public class UserDao extends DAO<User> {
 
     @Override
     public User create(User user) {
-        try {
-            PreparedStatement preparedStatement = this.connection.prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, user.getFistName());
             preparedStatement.setString(2, user.getLastName());
             preparedStatement.setString(3, user.getEmail());
@@ -70,8 +78,7 @@ public class UserDao extends DAO<User> {
     @Override
     public List<User> findAll() {
         List<User> users = new ArrayList<>();
-        try {
-            Statement statement = super.connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(SELECT_ALL);
             while (resultSet.next()) {
                 users.add(new User(
@@ -92,8 +99,7 @@ public class UserDao extends DAO<User> {
     @Override
     public User findById(int id) {
         User user = null;
-        try {
-            PreparedStatement preparedStatement = super.connection.prepareStatement(SELECT_BY_ID);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
@@ -112,8 +118,7 @@ public class UserDao extends DAO<User> {
 
     @Override
     public void update(User user) {
-        try {
-            PreparedStatement preparedStatement = super.connection.prepareStatement(UPDATE);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
             preparedStatement.setString(1, user.getFistName());
             preparedStatement.setString(2, user.getLastName());
             preparedStatement.setString(3, user.getEmail());
@@ -128,8 +133,7 @@ public class UserDao extends DAO<User> {
 
     @Override
     public void deleteById(int id) {
-        try {
-            PreparedStatement preparedStatement = super.connection.prepareStatement(DELETE_BY_ID);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
         } catch (Exception e) {
