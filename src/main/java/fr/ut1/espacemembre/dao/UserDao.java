@@ -11,6 +11,9 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Cette permet d'intéragir avec la table user dans la base de donnée
+ */
 public class UserDao extends DAO<User> {
 
     private static final String SELECT_ALL = "SELECT * FROM user";
@@ -23,8 +26,8 @@ public class UserDao extends DAO<User> {
 
     /**
      *
-     * @param email
-     * @return
+     * @param email L'adresese email de l'utilisateur
+     * @return Vrai si l'utilisateur existe, faux sinon
      */
     public boolean isEmailExist(String email) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_EMAIL)) {
@@ -39,9 +42,9 @@ public class UserDao extends DAO<User> {
 
     /**
      *
-     * @param email
-     * @param password
-     * @return
+     * @param email L'adresse email de l'utilisateur
+     * @param password Le mot de passe de l'utilisateur
+     * @return L'identifiant de l'utilsateur
      */
     public int loginByEmailPwd(String email, String password) {
         int userId = 0;

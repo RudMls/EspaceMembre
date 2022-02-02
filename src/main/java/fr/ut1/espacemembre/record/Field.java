@@ -6,9 +6,4 @@ public record Field(String value, String error) {
         this("", "");
     }
 
-    public Field(String value, String error) {
-        this.value = value;
-        this.error = error;
-    }
-
 }
