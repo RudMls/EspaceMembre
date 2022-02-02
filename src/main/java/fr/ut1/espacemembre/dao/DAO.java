@@ -16,7 +16,7 @@ public abstract class DAO<T> {
     /**
      *
      * @param objet L'objet que l'on veux créer
-     * @return
+     * @return L'objet crée initialement
      */
     public abstract T create(T objet);
 
